@@ -113,10 +113,19 @@ void enqueueRecent(int placeId) {
 }
 
 // ==================== 基础工具函数 ====================
-char* getPlaceName(int placeId) {
-    for (int i = 0; i < placeCount; i++)
-        if (places[i].id == placeId) return places[i].name;
-    return "未知地点";
+const char* getPlaceName(int id) {
+    for (int i = 0; i < placeCount; i++) {
+        if (places[i].id == id) {
+            return places[i].name;
+        }
+    }
+    return "无此地点";
+}
+
+const char* getHotLevel(int hot) {
+    if (hot >= 10) return "高热度";
+    else if (hot >= 5) return "中热度";
+    else return "低热度";
 }
 
 int getPlaceIndex(int placeId) {
@@ -319,7 +328,7 @@ void showAllPaths() {
 }
 
 // Dijkstra最短路径算法
-void dijkstra(int start, int dist[], int prev[]) {
+void dijkstra(int start, double dist[], int prev[]) {
     int visited[MAX_PLACE] = {0};
     for (int i = 0; i < graph.vertexNum; i++) {
         dist[i] = graph.edges[start][i];
@@ -365,7 +374,8 @@ void showShortestPath() {
         return;
     }
     
-    int dist[MAX_PLACE], prev[MAX_PLACE];
+    double dist[MAX_PLACE];
+    int prev[MAX_PLACE];
     dijkstra(startIdx, dist, prev);
     
     if (dist[endIdx] >= INF) {
@@ -500,12 +510,6 @@ int cmpHotAsc(const void *a, const void *b) {
 }
 int cmpHotDesc(const void *a, const void *b) {
     return ((Place*)b)->hot - ((Place*)a)->hot;
-}
-
-char* getHotLevel(int hot) {
-    if (hot >= 10) return "🔥 高热度";
-    else if (hot >= 3) return "⭐ 中热度";
-    else return "💡 低热度";
 }
 
 // 排序结果展示+跳转
